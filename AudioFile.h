@@ -855,7 +855,11 @@ bool AudioFile<T>::decodeAiffFile (std::vector<uint8_t>& fileData)
                 T sample;
                 
                 if (audioFormat == AIFFAudioFormat::Compressed)
-                    sample = (T)reinterpret_cast<float&> (sampleAsInt);
+                {
+                    float f;
+                    memcpy(&f, &sampleAsInt, sizeof(int32_t));
+                    sample = (T) f;
+                }
                 else // assume PCM
                     sample = AudioSampleConverter<T>::thirtyTwoBitIntToSample (sampleAsInt);
                 
